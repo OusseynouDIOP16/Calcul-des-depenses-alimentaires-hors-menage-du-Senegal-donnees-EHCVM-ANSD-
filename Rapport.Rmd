@@ -1,0 +1,530 @@
+---
+title: ''
+mainfont: Arial
+geometry: left = 2.5cm, right = 2cm, top = 2cm, bottom = 2cm
+output:
+  pdf_document:
+    latex_engine: xelatex
+    highlight: zenburn
+  html_document:
+    df_print: paged
+header-includes:
+- \usepackage{tcolorbox}
+- \usepackage{float}
+- \usepackage{sectsty}
+- \usepackage{paralist}
+- \usepackage{setspace}\spacing{1.5}
+- \usepackage{fancyhdr}
+- \usepackage{lastpage}
+- \usepackage{dcolumn}
+- \usepackage{natbib}\bibliographystyle{agsm}
+- \usepackage[nottoc, numbib]{tocbibind}
+- \usepackage[toc,title,page]{appendix}
+- \usepackage{xcolor}
+- \usepackage{framed}
+- \usepackage{fontspec}
+- \fancyhead[R]{\nouppercase{\leftmark}}
+- \pagestyle{fancy}
+- \renewcommand\footrulewidth{1pt}
+- \fancyfoot[C]{\textbf{Page \thepage/\pageref{LastPage}}}
+
+- \setlength{\headheight}{15pt}
+fontsize: 12pt
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set( warning = FALSE, message= FALSE, echo = TRUE, include = TRUE )
+```
+
+\allsectionsfont{\centering}
+\subsectionfont{\raggedright}
+\subsubsectionfont{\raggedright}
+\thispagestyle{empty}
+
+\begin{tcolorbox}[colback=white,colframe=blue]
+
+\begin{centering}
+
+\vspace{0cm}
+
+```{r ANSD_logo, echo=F, out.width="20%"}
+knitr::include_graphics("E:/KPAM ISEP 2/Semestre 4/Programmation R/Cours R 2023/EXPOSE R/ansd.png")
+```
+\vspace{0cm}
+
+\Large
+----------------------------------------------------------------------\newline
+{\fontsize{16pt}{14pt}\textbf {AGENCE NATIONALE DE LA STATISTIQUE ET DE LA DEMOGRAPHIE}}
+----------------------------------------------------------------------\newline 
+\vspace{0cm}
+```{r ensae_logo, echo=F, out.width="16%"}
+knitr::include_graphics("E:/KPAM ISEP 2/Semestre 4/Programmation R/Cours R 2023/EXPOSE R/ensae.jpg")
+```
+\vspace{0cm}
+
+\Large
+{\fontsize{14pt}{14pt}\bf ECOLE NATIONALE DE LA STATISTIQUE ET DE L'ANALYSE ECONOMIQUE PIERRE NDIAYE}
+
+\vspace{0.5cm}
+
+\Large
+
+\doublespacing
+\begin{center}
+  \setlength{\fboxrule}{1pt} % Épaisseur de la bordure
+  \setlength{\fboxsep}{9pt} % Espace entre la bordure et le contenu
+  \colorbox{yellow}{ % Couleur de fond
+    \begin{minipage}{0.8\textwidth}
+ {\bf PROJET DE R : ANALYSE DES DEPENSES HORS MENAGE}
+    \end{minipage}
+  }
+\end{center}
+
+\vspace{0.3cm}
+
+\normalsize
+\singlespacing
+Par
+
+\vspace{0.4 cm}
+
+\Large
+
+{\bf KPAKOU M'Mounéné  et Ousseynou DIOP}
+
+\vspace{0.5 cm}
+Sous la supervision de:
+\vspace{0.5 cm}
+
+\Large
+
+{\bf Mr. HADY DIALLO}
+
+\vspace{0.4 cm}
+{\fontsize{12pt}{14pt}\bf Ingénieur des Travaux Statistiques}
+
+\vspace{0.5cm}
+
+\normalsize
+
+\end{centering}
+\end{tcolorbox}
+\newpage
+
+\tableofcontents
+
+\newpage
+
+
+\textcolor{blue}{\addcontentsline{toc}{section}{Introduction}\section*{{Introduction}}}
+
+Le Sénégal, pays d'Afrique de l'Ouest, est confronté à des défis persistants en matière de conditions de vie et de sécurité alimentaire pour sa population. Malgré les efforts déployés par les autorités gouvernementales et les organisations internationales, de nombreuses familles sénégalaises font face à des difficultés d'accès à une alimentation adéquate et nutritive. Dans ce contexte, l'enquête harmonisée sur les conditions de vie des ménages au Sénégal revêt une importance capitale. Cette enquête nationale, menée de manière régulière, vise à collecter des données approfondies sur les conditions de vie des ménages sénégalais, y compris leurs habitudes alimentaires et leurs dépenses liées à l'alimentation.
+
+Parmi les différentes composantes des dépenses alimentaires, les dépenses hors ménage jouent un rôle significatif dans le budget des ménages sénégalais. Les dépenses hors ménage englobent les achats et les consommations alimentaires réalisés en dehors du domicile familial, que ce soit lors de repas pris à l'extérieur, d'achats de nourriture effectués lors de déplacements ou encore de dépenses liées à la restauration collective ou individuelle. Ces dépenses peuvent représenter une part importante du budget des ménages, en particulier dans les zones urbaines où les habitudes de consommation ont évolué avec l'urbanisation croissante et les modes de vie modernes. Ainsi, comprendre les caractéristiques de ces dépenses, leurs déterminants et leurs conséquences revêt une importance cruciale pour évaluer la sécurité alimentaire, l'accès à une alimentation saine et équilibrée, ainsi que les choix alimentaires des ménages sénégalais.
+
+Face à cette réalité, il est essentiel de comprendre les dépenses alimentaires hors ménage au Sénégal, en analysant leurs dynamiques, leurs variations en fonction des caractéristiques socio-économiques et géographiques des ménages, ainsi que leur impact sur la sécurité alimentaire et les modes de vie des populations. C'est dans ce contexte que notre étude vise à analyser les dépenses alimentaires hors ménage en utilisant les données de l'enquête harmonisée sur les conditions de vie des ménages au Sénégal. Plus spécifiquement, nous avons pour objectifs :
+
+- Examiner les tendances des dépenses alimentaires hors ménage par individu, en mettant en évidence les variations et les évolutions au fil du temps.
+- Analyser les tendances des dépenses alimentaires hors ménage par item, en identifiant les principales catégories de dépenses et en évaluant leur poids relatif dans le budget des ménages.
+
+Le présent rapport vise à présenter la méthode de calcul des dépenses alimentaire hors ménages par tete et par item  ainsi que les  resultats obtenus.
+
+\newpage
+
+# \textcolor {blue}{I-Prétraitement des données }
+## \textcolor {blue}{1-Sources de donnée}
+
+Les données utilisées dans cette étude sont issues de l'Enquête Harmonisée sur les Conditions de Vie des Ménages (EHCVM) au Sénégal. Ces données fournissent des informations détaillées sur les conditions de vie des ménages sénégalais, y compris leurs habitudes alimentaires et leurs dépenses liées à l'alimentation.
+
+Les données de l'EHCVM sont organisées en différentes sections, et nous nous concentrons particulièrement sur la section 7A, qui concerne les repas pris à l'extérieur du ménage au cours des 7 derniers jours. Cette section nous permet d'analyser les dépenses alimentaires hors ménage, c'est-à-dire les dépenses liées aux achats et à la consommation de nourriture réalisés en dehors du domicile familial.
+
+Pour calculer les dépenses alimentaires hors ménage, nous utilisons les bases de données s07a1_me_SEN_2021 et s07a2_me_SEN_2021, qui contiennent les informations pertinentes sur les repas pris à l'extérieur du ménage. Ces bases de données nous permettent de quantifier les dépenses alimentaires engagées lors de ces repas.
+
+## \textcolor {blue}{2-Préparation des  données}
+
+L'étude repose sur deux bases de données principales : s07a1_me_SEN_2021, qui contient des informations sur les ménages, et s07a2_me_SEN_2021, qui contient des informations sur les individus au sein de ces ménages. La première base de données comprend 2485 ménages et 32 variables, tandis que la seconde base de données comprend 27752 ménages et 33 variables.
+
+La base de données s07a1_me_SEN_2021 se concentre sur les informations spécifiques aux ménages, telle q les dépenses liées à l'alimentation. Elle nous permet d'obtenir des données agrégées au niveau du ménage, ce qui est essentiel pour notre étude sur les dépenses alimentaires hors ménage.
+
+La base de données s07a2_me_SEN_2021, quant à elle, est plus axée sur les individus au sein des ménages. Elle nous fournit des informations sur les comportements de consommation et de dépenses des individus, notamment en ce qui concerne les dépenses alimentaires hors du ménage.
+
+L'objectif principal de cette étude est de calculer les dépenses alimentaires hors du ménage. Pour atteindre cet objectif, nous nous concentrons sur les variables liées aux dépenses dans les deux bases de données. Nous avons également identifié une variable clé, interview__key, qui nous permettra d'agréger et de fusionner les données des deux bases pour une analyse plus complète.
+
+En sélectionnant uniquement les variables pertinentes et en agrégeant les données au niveau du ménage, nous pourrons obtenir une vision plus précise des dépenses alimentaires hors ménage au Sénégal. Cette analyse nous permettra de comprendre les montants dépensés, les tendances de consommation.
+
+## \textcolor {blue}{3-Traitement primaire des deux bases}
+-**Importationdes données**
+```{r}
+library(haven)
+library(tidyverse)
+way_1 <- "E:\\KPAM ISEP 2\\Semestre 4\\Programmation R\\Cours R 2023\\PROJET R\\Projet ISEP2 2023\\Ressources"
+dahm1 <- read_dta(file = paste0(way_1,"\\s07a1_me_SEN_2021.dta"))
+dahm2 <- read_dta(file = paste0(way_1,"\\s07a2_me_SEN_2021.dta"))
+ 
+```
+
+La démarche pour obtenir la base de données finale est la suivante :
+
+
+-renomme les colonnes de nos variables de la base individu et de menage   
+```{r}
+nom_col=colnames(dahm1)[1:32]
+
+nv_nom <- c(nom_col[1],nom_col[2],nom_col[3],nom_col[4],nom_col[5],
+            "repon_princ","cons_pdej","dep_pdej","dep_cpdej","cons_dej",
+            "dep_dej","dep_cdej","cons_diner"
+            ,"dep_diner","dep_cdiner","conso_colas","dep_colas",
+            "dep_ccolas","conso_bois_ch","dep_bois_ch","dep_cbois_ch",
+            "cons_bois_nalco","dep_bois_nalco"
+            ,"dep_cbois_nalco","conso_bois_alco","dep_c_bois_alco",
+            "dep_cbois_alco",nom_col[28],nom_col[29],nom_col[30],nom_col[31],nom_col[32])
+
+
+```
+
+on fait de  même pour l'autre base de donnée
+   
+```{r}
+nom_col1=colnames(dahm2)[1:32]
+nv_nom1 <- c(nom_col1[1],nom_col1[2],nom_col1[3],nom_col1[4],
+             nom_col1[5],"repon_princ",
+             "cons_pdej","dep_pdej","dep_cpdej","cons_dej","dep_dej",
+             "dep_cdej","cons_diner"
+            ,"dep_diner","dep_cdiner","conso_colas","dep_colas",
+            "dep_ccolas","conso_bois_ch",
+            "dep_bois_ch","dep_cbois_ch","cons_bois_nalco","dep_bois_nalco"
+            ,"dep_cbois_nalco","conso_bois_alco","dep_c_bois_alco",
+            "dep_cbois_alco",nom_col1[28],nom_col1[29],nom_col1[30],nom_col1[31],nom_col1[32])
+colnames(dahm1) <- nv_nom
+
+```
+
+-**Selection des variables d'interets**
+ Comme notre objectif c'est de calculer les dépenses alimentaires hors ménage .Par ricocher, les variables qui nous interesse sont les variables avec dépenses .  
+ 
+
+```{r}
+colnames(dahm2) <- nv_nom1
+dahm1 <- dahm1 %>%
+  select(interview__key, dep_pdej, dep_dej, 
+         dep_diner, dep_colas, dep_bois_ch, dep_bois_nalco
+         ,  dep_c_bois_alco)
+dahm2 <- dahm2 %>%
+  select(interview__key, dep_pdej,  dep_dej
+         , dep_diner,  dep_colas,  dep_bois_ch, dep_bois_nalco
+         ,  dep_c_bois_alco)
+
+```
+
+- **Imputation des données manquantes** : Dans les deux bases de données, il existe des données manquantes pour presque toutes les variables. Il y a des vrais NA, qui correspondent à des questions non-répondues par l'application, et des faux NA, qui sont des omissions ou des refus de réponse par les enquêteurs ou les enquêtés. Dans notre approche, nous allons imputer toutes les valeurs manquantes par 0 en supposant que l'individu ou le menage n'a pas consommé. 
+*impuation des valeurs manquantes par 0*
+
+```{r}
+### Imputation des données manquantes par 0 avec la tidyverse
+library(tidyverse)
+dahm1 <- replace_na(dahm1, replace = list(dep_pdej = 0,dep_dej=0
+                                          ,dep_diner=0,dep_colas=0,
+                                          dep_bois_ch=0,dep_bois_nalco=0
+                                          ,dep_c_bois_alco=0))
+
+dahm2 <- replace_na(dahm2, replace = list(dep_pdej = 0,dep_dej=0
+                                          ,dep_diner=0,dep_colas=0,
+                                          dep_bois_ch=0,dep_bois_nalco=0
+                                          ,dep_c_bois_alco=0))
+```
+
+- **Agrégation de la base de données individuelle** : Les individus enquêtés dans la base de données individuelle font partie des ménages. Pour obtenir une représentation de chaque ménage, nous devons agréger les données individuelles en utilisant la variable clé "interview__key".
+```{r}
+library(tidyverse)
+dahm2_agregaged <- dahm2 %>%
+  group_by(interview__key) %>%
+  summarise(dep_pdej = sum(dep_pdej),dep_dej=sum(dep_dej)
+            ,dep_diner=sum(dep_diner),dep_colas=sum(dep_colas),
+            dep_bois_ch=sum(dep_bois_ch)
+            ,dep_bois_nalco=sum(dep_bois_nalco)
+            ,dep_c_bois_alco=sum(dep_c_bois_alco))
+
+```
+-** on calcule à presentla totale des depenses individuelles en faisant  la somme de toutes les depenses effectuées par l'individus
+```{r}
+library(Hmisc)
+dahm2_agregaged <- dahm2_agregaged %>%
+  mutate(dpenses_ttle = rowSums(across(c( dep_pdej,  dep_dej,        
+                                          dep_diner,  dep_colas,  dep_bois_ch,   
+                                          dep_bois_nalco,  dep_c_bois_alco ))))
+label(data=dahm2_agregaged,dahm2_agregaged$dpenses_ttle, 
+      "Depenses totales individuelles durant les 7 derniers jours")
+
+```
+
+On calcule egalement les depenses totales pour le menage en faisant la somme de toutes les depenses effectuées hors menage
+
+```{r}
+#calcul des depenses totales pour le menage
+dahm1 <- dahm1 %>%
+  mutate(dpenses_ttle = rowSums(across(c( dep_pdej,  dep_dej,        
+                                          dep_diner,  dep_colas,  dep_bois_ch,   
+                                          dep_bois_nalco,  dep_c_bois_alco ))))
+label(data=dahm1,dahm1$dpenses_ttle, "Depenses totales menages durant les 7 derniers jours")
+
+```
+ 
+- **Correction des valeurs aberrantes niveau ménage**: Comme mentionné dans le questionnaire, les dépenses totales ne doivent pas dépasser 80 000 Fcfa. Nous avons conçidéré les dépenses supérieures a 80 000Fcfa comme des valeurs aberrantes.Nous les avons imputés par la mediane.
+On identifie les valeurs aberantes à travers le boxplot et on les imputes par la mediane
+**Detection des valeurs aberantes**
+
+```{r}
+valeurs_aberrantes <- dahm2_agregaged %>%
+  filter(dpenses_ttle > 80000  
+           ) %>%
+  pull(dpenses_ttle)
+
+```
+
+```{r}
+dahm2_agregaged <- dahm2_agregaged %>%
+  mutate(dpenses_ttle = ifelse(dpenses_ttle %in% valeurs_aberrantes,
+                               mediane, dpenses_ttle))
+#base dahm1
+
+valeurs_aberrantes <- dahm1 %>%
+  filter(dpenses_ttle > 80000  
+           ) %>%
+  pull(dpenses_ttle)
+dahm1 <- dahm1 %>%
+  mutate(dpenses_ttle = ifelse(dpenses_ttle %in% valeurs_aberrantes,
+                               mediane, dpenses_ttle))
+
+```
+
+- **Fusion des bases de données ménage et agrégée des individus** : Après avoir agrégé les données individuelles, nous aurons le même nombre de ménages et le même nombre de variables d'interêts que nous avons selectionnées que dans la base de données ménage. Nous fusionnons ensuite les deux bases de données en utilisant la fonction "append". Cela entraînera une duplication de chaque ménage dans la base fusionnée, car chaque ménage apparaîtra deux fois (une fois dans la base ménage et une fois dans la base agrégée des individus).
+```{r}
+dahm_last <- append(dahm1,dahm2_agregaged)
+```
+
+
+- **Agrégation de la base fusionnée pour obtenir la base de données finale** : Étant donné que chaque ménage apparaît deux fois dans la base fusionnée en raison de l'opération d'append, nous devons encore agréger les données en utilisant la même variable clé pour obtenir la base de données finale. Cela permettra d'avoir une représentation unique de chaque ménage dans la base finale, avec les variables pertinentes liées aux dépenses alimentaires hors ménage.
+
+```{r}
+## Réagrégation des données de dahm_last pour avoir la base finale 
+
+library(tidyverse)
+dahm_last <- data.frame(dahm_last)
+dahm_last <- dahm_last %>%
+  group_by(interview__key) %>%
+  summarise(dep_pdej = sum(dep_pdej),dep_dej=sum(dep_dej)
+            ,dep_diner=sum(dep_diner),dep_colas=sum(dep_colas),
+            dep_bois_ch=sum(dep_bois_ch)
+            ,dep_bois_nalco=sum(dep_bois_nalco)
+            ,dep_c_bois_alco=sum(dep_c_bois_alco),
+            dpenses_ttle = sum(dpenses_ttle))
+
+```
+
+Une fois que nous aurons obtenu cette base de données finale, nous serons en mesure de procéder à l'analyse des dépenses alimentaires hors ménage et de répondre à nos objectifs de recherche.
+
+
+## \textcolor {blue}{4-Traitement des variables}
+
+Dans cette partie, nous allons traité les variables de la base finale afin de calculer les dépenses totales par tete et par item.
+
+- **Identification et traitement des valeurs manquantes**: Dans la base finale, il n'y a pas de valeurs manquantes car l'imputation a éte faite dans les deux bases initiales  avant la fusion des deux bases .
+
+- **Nb**: Avant de faire la correction des valeurs aberrantes et les autres traitements, nous allons d'abord calculé les dépenses des ménages afin de les repérées plus facilement.
+
+# \textcolor {blue}{II-Calcul des dépenses alimentaires hors du ménage}
+## \textcolor {blue}{1-Calcul des dépenses alimentaires hors du ménage par item et du ménage}
+
+Dans la base finale, nous avons les dépenses par item pour chaque ménage. Le calcul des dépenses alimentaires hors du ménage se fera comme suit:
+
+**dépenses par item**= dépenses du ménage de l'item + dépenses recu en cadeau du ménage de l'item
+
+**dépenses totale par année**= somme des dépenses par item  
+
+```{r}
+## CALCUL DES DEPENSES PAR ANNEE
+dahm_last$dpenses_jr_ttle=(dahm_last$dpenses_ttle/7)
+label(data=dahm_last,dahm_last$dpenses_jr_ttle, 
+      "Depenses totales par jour du ménage ")
+dahm_last$dpenses_ann_ttle<-dahm_last$dpenses_jr_ttle*360
+label(data=dahm_last,dahm_last$dpenses_ann_ttle, 
+      "Depenses totales par année du ménage ")
+
+```
+
+- Après avoir traité les bases on les fusionne pour avoir une base finale comme indiqué ci-haut.
+
+## \textcolor {blue}{2-Calcul des dépenses alimentaires hors du ménage par tete}
+
+Pour le calcul des dépenses alimentaires hors du ménage par tete, nous nous sommes servis de la base s01_me_SEN_2021 pour dénombrer le nombre d'individu de chaque ménage.Ainsi, les  dépenses alimentaires hors du ménage par tête se calculeront  de la manière suivante :
+
+**dépenses alimentaires hors du ménage par tete**= dépenses totales du ménage/ nombre d'individu du ménage.
+on obtient ainsi les depenses alimentaires par tête en moyenne par année ou par jour 
+on importe la base de donnée de la section 1  
+
+```{r}
+library(haven)
+indivi<- read_dta(file = paste0(way_1,"\\s01_me_SEN_2021.dta"))
+indivi=data.frame(indivi)
+dahm_last$taille_mng=table(indivi$interview__key)
+base_socio<-read_dta(file = paste0(way_1,"\\s00_me_SEN_2021.dta"))
+dahm_last$region=base_socio$s00q01
+dahm_last$milieu_de_residence=base_socio$s00q04
+```
+
+ici par année
+
+```{r}
+
+dahm_last$dpenses_tete<-(dahm_last$dpenses_ann_ttle/dahm_last$taille_mng)
+label(data=dahm_last,dahm_last$dpenses_tete, "Depenses totales par tete du menage")
+
+```
+
+Afin de faire les analyses statistiques et les tests et la modelisation logistique on fait varecoter notre variable depenses totales par année en deux categories faibles==0 et élevées==1   
+
+**Recodage**  
+
+```{r}
+dahm_last$recode_dpenses_ttle <- ifelse(dahm_last$dpenses_ttle<15000*360,"depenses_faibles","depenses_elevees")
+
+```
+
+\newpage
+
+Pour faire l'analyse bivariée nous avons fait recourt à la section 0 et 1 où on a eu à identifier les valeurs manquantes des regions et de milieux de residence à travers la variable grappe.
+Ce que l'on fait ,c'est que pour les regions ayant des valeurs manquantes on identifie leurs grappe correspondant.Et à l'inverse on obtient le regions correspondants à travers  des filtres  
+
+```{r}
+grapna<-unique(na.omit(base_socio[is.na(base_socio$s00q01), "grappe"]))
+
+for (i in grapna$grappe){
+  reg<-na.omit(base_socio[base_socio$grappe==i,"s00q01"])
+  
+  base_socio[which(base_socio$grappe==i),"s00q01"]= reg$s00q01[1]
+}
+sum(is.na(base_socio$s00q01))
+```
+
+Il reste 29 valeurs manquantes nous allons les exclures aucours de l'analyse  puisqu'on ne peut pas les imputer sans d'autres informations.
+on fait de même pour la variable region.  
+
+```{r}
+grapna<-unique(na.omit(base_socio[is.na(base_socio$s00q04), "grappe"]))
+
+for (i in grapna$grappe){
+  reg<-na.omit(base_socio[base_socio$grappe==i,"s00q04"])
+  
+  base_socio[which(base_socio$grappe==i),"s00q04"]= reg$s00q04[1]
+  
+}
+
+```
+
+Après cela on peut recoder nos variables region et milieu de residence   
+
+```{r}
+dahm_last$region <- ifelse(dahm_last$region==1,"Dakar",
+                           ifelse(dahm_last$region==2,"Ziguinchor",                                 ifelse(dahm_last$region==3,"Diourbel",ifelse(dahm_last$region==4,"Saint-Louis",                                                                               ifelse(dahm_last$region==5,"Tambacounda",                                                ifelse(dahm_last$region==6,"Kaolack",ifelse(dahm_last$region==7,"Thies",                                                                                           ifelse(dahm_last$region==8,"Louga",
+              ifelse(dahm_last$region==9,"Fatick",ifelse(dahm_last$region==10,"Kolda",                                          ifelse(dahm_last$region==11,"Matam",ifelse(dahm_last$region==12,"Kaffrine",ifelse(dahm_last$region==13,                                                                  "Kedougou","Sedhiou")))))))))))))
+
+dahm_last$milieu_de_residence <- ifelse(dahm_last$milieu_de_residence==1,"Urbain","Rural")
+
+```
+
+# \textcolor {blue}{III-Analyse descriptive des variables}
+## \textcolor {blue}{1-Analyse univariée}
+
+- **Dépenses totale des ménages**
+
+*tableau 1: statistique dépenses totales des ménages*
+
+```{r}
+summary(dahm_last$dpenses_ttle)
+
+```
+
+Les résultats du tableau indiquent qu'en moyenne, les ménages dépensent environ 638 Fcfa pour les dépenses alimentaires hors du ménage au cours d'une période de 7 jours. Cela signifie que chaque ménage dépense en moyenne environ 638 Fcfa pour acheter et consommer des aliments en dehors de leur domicile familial sur une semaine.
+
+- **Description dépenses des ménages**
+
+La figure 2 met en évidence que 80% des ménages ont des dépenses relativement faibles (moins de 1500 Fcfa) pour les consommations hors du ménage. Cela suggère que la majorité des ménages ont tendance à limiter leurs dépenses en matière de consommation alimentaire en dehors du domicile familial.
+
+
+```{r}
+summary(dahm_last$dpenses_ann_ttle)
+
+```
+
+on constate que la somme maximale depensée par année est de 2777143 avec une moyenne de 86968
+
+## \textcolor {blue}{2-Analyses bivariées}
+ 
+*On peut effectuer des tests pour etudier les corrélations entre des variables*
+ 
+-**region et depenses totale**
+
+```{r}
+chi_square_test <- chisq.test(dahm_last$dpenses_ann_ttle, dahm_last$region,
+                              simulate.p.value = TRUE)
+chi_square_test
+```
+le test de chi deux nous donne une pvalue non significatif ce qui peut suggerer l'inexistence d'une correlation entre les deux variables
+
+-**milieu de residence et depenses totale**
+
+```{r}
+chi_square_test <- chisq.test(dahm_last$dpenses_ann_ttle, dahm_last$milieu_de_residence,
+                              simulate.p.value = TRUE)
+chi_square_test
+```
+
+la p-value (0.04148)inferieur à 0.05 ce qui signifie que le fait de vivre en milieu rural ou urbain influencerait la consommations hors menages
+Pour le croisement entre les variables quantitatives( cf shiny)
+
+## \textcolor {blue}{3-Analyses économetrique}
+
+-**modelisation linéaire**
+
+
+**Entre variable dpenses_ann_ttle et region**
+
+```{r}
+mod<-lm(dahm_last$dpenses_ann_ttle~dahm_last$region,data=dahm_last)
+coef(mod)
+anova(mod)
+```
+
+-**entre variable dpenses_ann_ttle et region**
+
+```{r}
+mod<-lm(dahm_last$dpenses_ann_ttle~dahm_last$milieu_de_residence,data=dahm_last)
+coef(mod)
+anova(mod)
+```
+
+**Analyse de la covariance** 
+
+```{r}
+mod1<-lm(dahm_last$dpenses_ann_ttle~dahm_last$milieu_de_residence*dahm_last$region,dahm_last)
+summary.aov(mod1)
+```
+
+-**regression logistique (cf script R et dashboard shiny)**
+
+\textcolor{blue}{\addcontentsline{toc}{section}{conclusion}\section*{{conclusion}}}
+
+En succincte, l' étude sur les dépenses alimentaires hors du ménage au Sénégal nous a permis de mettre en évidence plusieurs aspects importants. Nous avons constaté que les dépenses alimentaires hors du ménage représentent une part peu significative du budget des ménages sénégalais, en particulier dans les zones urbaines. Les habitudes de consommation évoluent avec l'urbanisation croissante et les modes de vie modernes, ce qui se traduit par une augmentation des dépenses hors du ménage. En examinant les régions, nous avons observé que Dakar est la région où les ménages ont le plus tendance à consommer hors du ménage, suivi de Thies et de Diourbel. Cela pourrait être attribué à la disponibilité d'options de restauration et de lieux de socialisation dans les zones urbaines plus développées.
+
+Concernant les montants dépensés, nous avons constaté que les ménages ont en moyenne tendance à dépenser davantage hors du ménage pour le petit déjeuner, suivi du déjeuner et du dîner. Les dépenses pour les boissons alcoolisées hors du ménage sont relativement faibles, indiquant peut-être une préférence pour une consommation modérée ou la croyance religieuse.De plus, les résultats montrent que les individus dépensent en moyenne 86 Fcfa au cours de 7 jours pour les alimentations hors ménage. Cette information est précieuse pour évaluer l'impact économique et social de ces dépenses sur les ménages et la population en général.
+
+
+
+
+
+
+
+
+
+
